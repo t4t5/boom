@@ -1,7 +1,8 @@
+use colour::{red, yellow};
 use dirs::home_dir;
 use spinners::{Spinner, Spinners};
 use std::path::Path;
-use std::process::Command;
+use std::process::{exit, Command};
 use std::{env, fs, io};
 use substring::Substring;
 
@@ -19,7 +20,7 @@ fn main() {
 
 fn create_boom_folder_if_no_exist() {
     if let Err(message) = fs::create_dir_all(get_boom_dir() + TEMPLATES_DIR) {
-        println!("Error creating .boom directory: {}", &message);
+        error(format!("Error creating .boom directory: {}", &message).as_str());
     }
 }
 
@@ -33,15 +34,18 @@ fn create_project_from_template(template_name: &String) {
     let dest_path = env::current_dir().unwrap().to_str().unwrap().to_owned() + "/" + template_name;
 
     if !Path::new(&template_path).exists() {
-        panic!(
-            "There's no template called {} in your .boom directory!",
-            template_name
+        error(
+            format!(
+                "There's no template called \"{}\" in your .boom directory!",
+                template_name
+            )
+            .as_str(),
         );
     }
 
     if Path::new(&boilerplate_path).exists() {
         if let Err(message) = copy_dir_all(&boilerplate_path, &dest_path) {
-            println!("Error creating boilerplate: {}", message);
+            error(format!("Error creating boilerplate: {}", message).as_str())
         }
     }
 
@@ -78,7 +82,7 @@ fn run_init_commands(template_path: &str, dest_path: &str) {
         println!("{:?}", args);
 
         if let Err(message) = Command::new(base_cmd).args(args).output() {
-            println!("Error running command {}", &message);
+            yellow!("Error running command {}", &message);
         }
 
         sp.stop();
@@ -99,4 +103,9 @@ fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> 
     }
 
     Ok(())
+}
+
+fn error(msg: &str) {
+    red!(msg);
+    exit(1);
 }
