@@ -1,10 +1,13 @@
 use dirs::home_dir;
+use spinners::{Spinner, Spinners};
 use std::path::Path;
 use std::process::Command;
 use std::{env, fs, io};
+use substring::Substring;
 
-static TEMPLATES_DIR: &'static str = "/templates/";
-static BOILERPLATE_DIR: &'static str = "/boilerplate/";
+const TEMPLATES_DIR: &str = "/templates/";
+const BOILERPLATE_DIR: &str = "/boilerplate/";
+const INIT_COMMAND_FILE: &str = "/init.sh";
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -44,6 +47,10 @@ fn create_project_from_template(template_name: &String) {
 
     println!("✓ Created project: {}", &dest_path);
 
+    run_init_commands(&template_path, &dest_path);
+}
+
+fn run_init_commands(template_path: &str, dest_path: &str) {
     assert!(env::set_current_dir(&dest_path).is_ok());
 
     println!(
@@ -51,12 +58,31 @@ fn create_project_from_template(template_name: &String) {
         env::current_dir().unwrap().to_str().unwrap()
     );
 
-    let output = Command::new("npm.cmd")
-        .arg("install")
-        .output()
-        .expect("Failed to run npm install");
+    let commands_str = fs::read_to_string(template_path.to_owned() + INIT_COMMAND_FILE)
+        .expect("Unable to read file");
 
-    println!("Output {:?}", &output.stdout.as_slice());
+    let commands = commands_str.split(";").filter(|&x| !x.trim().is_empty());
+
+    for command in commands {
+        let sp = Spinner::new(&Spinners::BouncingBar, command.to_owned().into());
+
+        let index = command.find(" ").unwrap();
+        let base_cmd = &command.substring(0, index);
+        let args: Vec<&str> = command
+            .substring(index, &command.len() + 0)
+            .split(" ")
+            .filter(|&x| !x.trim().is_empty())
+            .collect();
+
+        println!("{}", base_cmd);
+        println!("{:?}", args);
+
+        if let Err(message) = Command::new(base_cmd).args(args).output() {
+            println!("Error running command {}", &message);
+        }
+
+        sp.stop();
+    }
 }
 
 fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
