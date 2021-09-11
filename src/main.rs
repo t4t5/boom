@@ -1,4 +1,4 @@
-use colour::{red, yellow};
+use colour::{green_ln, red, yellow_ln};
 use dirs::home_dir;
 use spinners::{Spinner, Spinners};
 use std::path::Path;
@@ -49,7 +49,7 @@ fn create_project_from_template(template_name: &String) {
         }
     }
 
-    println!("✓ Created project: {}", &dest_path);
+    green_ln!("✓ Created project: {}", &dest_path);
 
     run_init_commands(&template_path, &dest_path);
 }
@@ -57,15 +57,12 @@ fn create_project_from_template(template_name: &String) {
 fn run_init_commands(template_path: &str, dest_path: &str) {
     assert!(env::set_current_dir(&dest_path).is_ok());
 
-    println!(
-        "changed directory {:?}",
-        env::current_dir().unwrap().to_str().unwrap()
-    );
-
     let commands_str = fs::read_to_string(template_path.to_owned() + INIT_COMMAND_FILE)
         .expect("Unable to read file");
 
     let commands = commands_str.split(";").filter(|&x| !x.trim().is_empty());
+
+    green_ln!("Running initialisation scripts...");
 
     for command in commands {
         let sp = Spinner::new(&Spinners::BouncingBar, command.to_owned().into());
@@ -78,15 +75,14 @@ fn run_init_commands(template_path: &str, dest_path: &str) {
             .filter(|&x| !x.trim().is_empty())
             .collect();
 
-        println!("{}", base_cmd);
-        println!("{:?}", args);
-
         if let Err(message) = Command::new(base_cmd).args(args).output() {
-            yellow!("Error running command {}", &message);
+            yellow_ln!("Error running command {}", &message);
         }
 
         sp.stop();
     }
+
+    green_ln!("\n✓ Done!");
 }
 
 fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
