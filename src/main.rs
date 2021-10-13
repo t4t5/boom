@@ -13,9 +13,10 @@ const INIT_COMMAND_FILE: &str = "/init.sh";
 fn main() {
     let args: Vec<String> = env::args().collect();
     let boilerplate = &args[1];
+    let proj_name = &args[2];
 
     create_boom_folder_if_no_exist();
-    create_project_from_template(&boilerplate);
+    create_project_from_template(&boilerplate, &proj_name);
 }
 
 fn create_boom_folder_if_no_exist() {
@@ -28,10 +29,10 @@ fn get_boom_dir() -> String {
     home_dir().unwrap().into_os_string().into_string().unwrap() + "/.boom"
 }
 
-fn create_project_from_template(template_name: &String) {
+fn create_project_from_template(template_name: &String, proj_name: &String) {
     let template_path = get_boom_dir() + TEMPLATES_DIR + template_name;
     let boilerplate_path = template_path.to_owned() + BOILERPLATE_DIR;
-    let dest_path = env::current_dir().unwrap().to_str().unwrap().to_owned() + "/" + template_name;
+    let dest_path = env::current_dir().unwrap().to_str().unwrap().to_owned() + "/" + proj_name;
 
     if !Path::new(&template_path).exists() {
         error(
