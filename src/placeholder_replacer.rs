@@ -6,27 +6,53 @@ use std::fs::{self, OpenOptions};
 use std::io::{self, prelude::*};
 
 use crate::utils::error;
+use walkdir::WalkDir;
 
 pub fn replace_placeholders(dest_path: &str, proj_name: &str) {
     let placeholder_replacements = [["__name__", &proj_name]];
 
-    let file_paths = [
-        dest_path.to_owned() + "/package.json",
-        dest_path.to_owned() + "/public/CNAME",
-    ];
-
     for [placeholder, replacement] in placeholder_replacements {
-        for file_path in &file_paths {
-            if let Err(_) = replace_in_file(&file_path, &placeholder, &replacement) {
-                error(
-                    format!(
-                        "Couldn't replace placeholder '{}' in file '{}'",
-                        &placeholder, &file_path
-                    )
-                    .as_str(),
-                );
+        check_dir(&dest_path, &placeholder, &replacement);
+    }
+}
+
+fn check_dir(path: &str, placeholder: &str, replacement: &str) {
+    for (_, file) in WalkDir::new(path)
+        .into_iter()
+        .filter_map(|file| file.ok())
+        .enumerate()
+    {
+        if file.metadata().unwrap().is_file() {
+            match fstream::contains(file.path(), &placeholder) {
+                Some(b) => {
+                    if b {
+                        check_file(file.path().to_str().unwrap(), &placeholder, &replacement);
+                    }
+                }
+                None => println!("Error in walking Dir"),
             }
         }
+    }
+}
+
+fn check_file(file_path: &str, placeholder: &str, replacement: &str) {
+    match fstream::read_lines(file_path) {
+        Some(lines) => {
+            for (_pos, line) in &mut lines.iter().enumerate() {
+                if line.contains(placeholder) {
+                    if let Err(_) = replace_in_file(&file_path, &placeholder, &replacement) {
+                        error(
+                            format!(
+                                "Couldn't replace placeholder '{}' in file '{}'",
+                                &placeholder, &file_path
+                            )
+                            .as_str(),
+                        );
+                    }
+                }
+            }
+        }
+        None => println!("Error in reading File"),
     }
 }
 
