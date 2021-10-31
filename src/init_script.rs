@@ -1,5 +1,5 @@
 use colour::{green_ln, yellow_ln};
-use spinners::{Spinner, Spinners};
+use spinner::SpinnerBuilder;
 use std::process::Command;
 use std::{env, fs};
 
@@ -15,8 +15,11 @@ pub fn run_init_commands(template_path: &str, dest_path: &str) {
 
     green_ln!("Running initialisation scripts...");
 
+    let sp = SpinnerBuilder::new("Starting...".into()).start();
+
     for command in commands {
-        let sp = Spinner::new(&Spinners::BouncingBar, command.to_owned().into());
+        let command = str::replace(command, "\n", "");
+        sp.update(command.to_owned().into());
 
         let index = &command.find(" ").unwrap();
         let base_cmd = &command[(0 as usize)..index.to_owned()];
@@ -28,10 +31,8 @@ pub fn run_init_commands(template_path: &str, dest_path: &str) {
             .collect();
 
         if let Err(message) = Command::new(base_cmd).args(args).output() {
-            yellow_ln!("Error running command {}", &message);
+            yellow_ln!("Error running command {}: {}", &base_cmd, &message);
         }
-
-        sp.stop();
     }
 
     green_ln!("\n✓ Done!");

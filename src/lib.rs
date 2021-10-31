@@ -1,5 +1,5 @@
 use colour::green_ln;
-use spinners::{Spinner, Spinners};
+use spinner::SpinnerBuilder;
 use std::fs::File;
 use std::process::Command;
 use std::{env, fs};
@@ -101,7 +101,9 @@ fn add_new_remote_boilerplate(args: &Vec<String>) {
         .collect();
 
     let loading_msg = "Fetching template from ".to_owned() + &github_url.to_owned();
-    let sp = Spinner::new(&Spinners::BouncingBar, loading_msg);
+
+    let sp = SpinnerBuilder::new(String::from(&loading_msg).into()).start();
+    sp.update(String::from(&loading_msg).into());
 
     let templates_path = get_boom_dir() + TEMPLATES_DIR;
 
@@ -112,7 +114,6 @@ fn add_new_remote_boilerplate(args: &Vec<String>) {
         panic!()
     }
 
-    sp.stop();
     green_ln!("\n✓ Added new boom template: {}", &template_name);
 }
 
