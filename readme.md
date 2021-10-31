@@ -1,10 +1,10 @@
 # Boom 💥 
 
-A fast & simple boilerplate generator, built with Rust. 🦀
+A fast & simple boilerplate generator, built with Rust.
 
 ## Installing boom
 
-**This package is not yet downloadable on Brew or other package managers, so for now installing it takes slightly more work**
+**This package is not yet downloadable on Brew or other package managers, so for now installing it takes slightly more work.**
 
 1. Clone this repo into the directory of your choice:
 ```bash
@@ -18,34 +18,34 @@ cd boom && cargo build
 
 3. Set an alias for "boom" in your `.zshrc` or `.bash_profile`:
 ```bash
-alias boom="~/{YOUR_DIR}/boom/target/debug/boom"
+alias boom="{YOUR_DIR}/boom/target/debug/boom"
 ```
 
 ## Using boom
 
 Boom will automatically create a `.boom` folder in your home directory. This is where all your boilerplate generators will be stored.
 
-You can add this directory to your version-controlled [dotfiles](https://thoughtbot.com/upcase/videos/intro-to-dotfiles) so that you don't lose your templates library.
+You can add this directory to your version-controlled [dotfiles](https://thoughtbot.com/upcase/videos/intro-to-dotfiles) so that you don't lose your library of boilerplate templates.
 
 ### Adding a boom template
 
 To create a new boom template, run:
 
 ```bash
-boom new <template-name>
+boom new <boom-template-name>
 ```
 
-A new directory will be created in your `.boom` folder, with a `boilerplate` directory and an `init.sh` file.
+A new `<boom-template-name>` directory will be created in your `.boom` folder, with a `boilerplate` directory and an `init.sh` file inside it.
 
-Add the files you want in your boilerplate in the `boilerplate` directory, and the commands you want to run when starting a project using this boilerplate in `init.sh` (like `npm install`).
+Add the files you want for your boilerplate in the `boilerplate` directory, and the commands you want to run when starting a project using this boilerplate in `init.sh` (like "npm install" for example).
 
 ### Using your new boom template
 
 ```bash
-boom <template-name> <project-name>
+boom <boom-template-name> <your-project-name>
 ```
 
-This will create a new folder called `<project-name>` in whatever directory you're currently in, using the `<template-name>` boilerplate.
+This will create a new folder called `<your-project-name>` in whatever directory you're currently in, using the `<boom-template-name>` boilerplate.
 
 ## Adding others' templates
 
@@ -61,4 +61,10 @@ Now let's say you want to add [t4t5's eleventy template](https://github.com/t4t5
 
 ```bash
 boom add https://github.com/t4t5/dotfiles/tree/master/boom/templates/eleventy
+```
+
+You can now use this boilerplate using:
+
+```bash
+boom eleventy <your-project-name>
 ```
