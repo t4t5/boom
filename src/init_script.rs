@@ -11,7 +11,7 @@ pub fn run_init_commands(template_path: &str, dest_path: &str) {
     let commands_str = fs::read_to_string(template_path.to_owned() + INIT_COMMAND_FILE)
         .expect("Unable to read file");
 
-    let commands = commands_str.split(";").filter(|&x| !x.trim().is_empty());
+    let commands = commands_str.split("\n").filter(|&x| !x.trim().is_empty());
 
     green_ln!("Running initialisation scripts...");
 
