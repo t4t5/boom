@@ -2,6 +2,9 @@
 
 A fast & simple boilerplate generator, built with Rust.
 
+<img src="https://user-images.githubusercontent.com/2598660/139595667-d44b9b10-c389-41ad-ac43-de08e5b249cd.gif" width="600" />
+
+
 ## Installing boom
 
 **This package is not yet downloadable on Brew or other package managers, so for now installing it takes slightly more work.**
