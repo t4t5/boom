@@ -24,7 +24,7 @@ pub fn start() {
     let command = match args.get(1) {
         Some(template_name) => template_name,
         None => {
-            error("You need to specify the name of your boilerplate or a valid command ('new', 'add') as the first argument!");
+            error("You need to specify the name of your template or a valid command (new|add) as the first argument!");
             panic!()
         }
     };
