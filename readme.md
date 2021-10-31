@@ -50,7 +50,7 @@ boom <boom-template-name> <your-project-name>
 
 This will create a new folder called `<your-project-name>` in whatever directory you're currently in, using the `<boom-template-name>` boilerplate.
 
-## Adding others' templates
+### Adding others' templates
 
 We encourage you to share your boom templates in a public dotfiles repo! That way, others can find and use your templates in their own projects.
 
@@ -71,3 +71,9 @@ You can now use this boilerplate using:
 ```bash
 boom eleventy <your-project-name>
 ```
+
+## Todos
+
+- [ ] Remove dependency on [github-clone](https://github.com/HR/github-clone)
+- [ ] Show the output of scripts from templates' `init.sh` (so that you can see progress of `npm install` for example)
+- [ ] Support calling `boom` command without any arguments. Show an interactive UI where you can pick from your templates.
