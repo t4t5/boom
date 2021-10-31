@@ -3,6 +3,9 @@ use std::{env, fs};
 mod init_script;
 use init_script::run_init_commands;
 
+mod placeholder_replacer;
+use placeholder_replacer::replace_placeholders;
+
 mod utils;
 use utils::{error, get_boom_dir, TEMPLATES_DIR};
 
@@ -35,6 +38,8 @@ pub fn start() {
     create_boom_folder_if_no_exist();
 
     let (template_path, dest_path) = create_project_from_template(&template_name, &proj_name);
+
+    replace_placeholders(&dest_path, &proj_name);
 
     let skip_init = String::from(SKIP_INIT_ARG);
 
