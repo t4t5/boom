@@ -40,7 +40,7 @@ boom new <boom-template-name>
 
 A new `<boom-template-name>` directory will be created in your `.boom` folder, with a `boilerplate` directory and an `init.sh` file inside it.
 
-Add the files you want for your boilerplate in the `boilerplate` directory, and the commands you want to run when starting a project using this boilerplate in `init.sh` (like "npm install" for example).
+Add the files you want for your boilerplate to the `boilerplate` directory, and the commands you want to run when starting a project using to `init.sh` (e.g. "npm install").
 
 ### Using your new boom template
 
